@@ -7,6 +7,9 @@
 #include "unitree_api/msg/request.hpp"
 #include "common/ros2_b2_sport_client.h"
 
+// Yuda: Include the TwistStamped message header
+#include "geometry_msgs/msg/twist_stamped.hpp
+
 using namespace std::chrono_literals;
 
 struct TestOption
@@ -89,11 +92,31 @@ public:
         test_option_.id = 1;
         user_interface_.test_option_ = &test_option_;
 
+        // Yuda: Initialize the subscriber to listen to geometry_msgs/msg/TwistStamped
+        twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
+            "cmd_vel", 
+            10, 
+            std::bind(&B2wSportClientNode::twistCallback, this, std::placeholders::_1)
+        );
+
         t1_ = std::thread([this] {
             // 等待一段时间，让 ROS2 spin 处理完初始启动
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
             run();
         });
+    }
+
+    // Yuda: Define the callback function logic
+    void twistCallback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
+        unitree_api::msg::Request req;
+        
+        // Map TwistStamped fields to Move parameters
+        float vx = msg->twist.linear.x;
+        float vy = msg->twist.linear.y; 
+        float vyaw = msg->twist.angular.z;
+
+        // Execute the Move command via the SportClient
+        sport_client_.Move(req, vx, vy, vyaw);
     }
 
     void run()
@@ -175,6 +198,8 @@ private:
     TestOption test_option_;
     UserInterface user_interface_;
     std::thread t1_; 
+    // Yuda: Add the subscriber declaration
+    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr twist_sub_;
 };
 
 int main(int argc, char **argv)
