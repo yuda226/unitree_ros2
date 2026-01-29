@@ -8,7 +8,8 @@
 #include "common/ros2_b2_sport_client.h"
 
 // Yuda: Include the TwistStamped message header
-#include "geometry_msgs/msg/twist_stamped.hpp
+#include "geometry_msgs/msg/twist_stamped.hpp"
+// #include "geometry_msgs/msg/twist.hpp"
 
 using namespace std::chrono_literals;
 
@@ -115,6 +116,10 @@ public:
         float vy = msg->twist.linear.y; 
         float vyaw = msg->twist.angular.z;
 
+        // Add this line to print the values to the terminal
+        RCLCPP_INFO(this->get_logger(), "Received cmd_vel -> vx: %.2f, vy: %.2f, vyaw: %.2f", vx, vy, vyaw);
+
+        // unitree_api::msg::Request req;
         // Execute the Move command via the SportClient
         sport_client_.Move(req, vx, vy, vyaw);
     }

@@ -27,6 +27,8 @@ set (
   rclcpp
   std_msgs
   rosbag2_cpp
+  #-- Yuda: add geometry_msgs for b2 sport --
+  geometry_msgs
 )
 
 # find dependencies
@@ -38,6 +40,9 @@ find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(rosbag2_cpp REQUIRED)
 find_package(Eigen3 REQUIRED)
+
+# <!-- Yuda: add geometry_msgs for b2 sport -->
+find_package(geometry_msgs REQUIRED)
 
 add_executable(low_level_ctrl src/low_level_ctrl.cpp src/common/motor_crc.cpp)
 add_executable(low_level_ctrl_hg src/h1-2/lowlevel/low_level_ctrl_hg.cpp src/common/motor_crc_hg.cpp)
@@ -137,7 +142,12 @@ install(TARGETS
         read_wireless_controller
         go2_sport_client
         go2_stand_example
-        DESTINATION)
+        #Yuda: add install for b2 sport
+        b2w_sport_client
+        b2w_stand_example
+        b2_sport_client
+        b2_stand_example
+        DESTINATION lib/${PROJECT_NAME})
 
 
 install(TARGETS go2_robot_state_client)
