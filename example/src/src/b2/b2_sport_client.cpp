@@ -7,7 +7,7 @@
 #include "unitree_api/msg/request.hpp"
 #include "common/ros2_b2_sport_client.h"
 
-// Yuda: Include the TwistStamped message header
+// YD: Include the TwistStamped message header
 #include "geometry_msgs/msg/twist_stamped.hpp"
 // #include "geometry_msgs/msg/twist.hpp"
 
@@ -93,7 +93,7 @@ public:
         test_option_.id = 1;
         user_interface_.test_option_ = &test_option_;
 
-        // Yuda: Initialize the subscriber to listen to geometry_msgs/msg/TwistStamped
+        // YD: Initialize the subscriber to listen to geometry_msgs/msg/TwistStamped
         twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
             "cmd_vel", 
             10, 
@@ -107,7 +107,7 @@ public:
         });
     }
 
-    // Yuda: Define the callback function logic
+    // YD: Define the callback function
     void twistCallback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
         unitree_api::msg::Request req;
         
@@ -116,7 +116,7 @@ public:
         float vy = msg->twist.linear.y; 
         float vyaw = msg->twist.angular.z;
 
-        // Add this line to print the values to the terminal
+        // Print the values 
         RCLCPP_INFO(this->get_logger(), "Received cmd_vel -> vx: %.2f, vy: %.2f, vyaw: %.2f", vx, vy, vyaw);
 
         // unitree_api::msg::Request req;
@@ -203,7 +203,7 @@ private:
     TestOption test_option_;
     UserInterface user_interface_;
     std::thread t1_; 
-    // Yuda: Add the subscriber declaration
+    // YD: Add the subscriber declaration
     rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr twist_sub_;
 };
 

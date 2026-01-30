@@ -16,7 +16,7 @@
   <depend>std_msgs</depend>
   <depend>rosbag2_cpp</depend>
  
-  <!-- Yuda: add geometry_msgs for b2 sport -->
+  <!-- YD: add geometry_msgs for b2 sport -->
   <depend>geometry_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
