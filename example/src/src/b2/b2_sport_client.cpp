@@ -9,7 +9,7 @@
 
 // YD: Include the TwistStamped message header
 #include "geometry_msgs/msg/twist_stamped.hpp"
-// #include "geometry_msgs/msg/twist.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 using namespace std::chrono_literals;
 
@@ -94,7 +94,8 @@ public:
         user_interface_.test_option_ = &test_option_;
 
         // YD: Initialize the subscriber to listen to geometry_msgs/msg/TwistStamped
-        twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
+        // twist_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
+        twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>(
             "cmd_vel", 
             10, 
             std::bind(&B2wSportClientNode::twistCallback, this, std::placeholders::_1)
@@ -108,13 +109,17 @@ public:
     }
 
     // YD: Define the callback function
-    void twistCallback(const geometry_msgs::msg::TwistStamped::SharedPtr msg) {
+    void twistCallback(const geometry_msgs::msg::Twist::SharedPtr msg) {
         unitree_api::msg::Request req;
         
         // Map TwistStamped fields to Move parameters
-        float vx = msg->twist.linear.x;
-        float vy = msg->twist.linear.y; 
-        float vyaw = msg->twist.angular.z;
+        // float vx = msg->twist.linear.x;
+        // float vy = msg->twist.linear.y; 
+        // float vyaw = msg->twist.angular.z;
+
+        float vx = msg->linear.x;
+        float vy = msg->linear.y; 
+        float vyaw = msg->angular.z;
 
         // Print the values 
         RCLCPP_INFO(this->get_logger(), "Received cmd_vel -> vx: %.2f, vy: %.2f, vyaw: %.2f", vx, vy, vyaw);
@@ -204,7 +209,7 @@ private:
     UserInterface user_interface_;
     std::thread t1_; 
     // YD: Add the subscriber declaration
-    rclcpp::Subscription<geometry_msgs::msg::TwistStamped>::SharedPtr twist_sub_;
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr twist_sub_;
 };
 
 int main(int argc, char **argv)
