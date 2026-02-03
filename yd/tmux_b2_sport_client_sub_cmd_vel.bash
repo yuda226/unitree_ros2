@@ -24,19 +24,21 @@ if [ $? != 0 ]; then
     tmux bind-key -t vi-copy 'v' begin-selection
     tmux bind-key -t vi-copy 'y' copy-pipe "xclip -sel clip -i"
     
+    tmux send-keys -t tmux_run 'sleep 3; ros2 launch b2_sport_client.launch.py' C-m
+    tmux select-layout tiled
+    
+    tmux split-window -h -t tmux_run
+    tmux send-keys -t tmux_run 'sleep 1, ' C-m
+    # tmux send-keys -t tmux_run 'sleep 1; ros2 run unitree_ros2_example b2_sport_client' C-m
+    tmux select-layout tiled
+    
+    tmux split-window -h -t tmux_run
     tmux send-keys -t tmux_run '' C-m
-    tmux select-layout tiled
-    
-    tmux split-window -h -t tmux_run
-    tmux send-keys -t tmux_run 'sleep 1; ros2 run unitree_ros2_example b2_sport_client' C-m
-    tmux select-layout tiled
-    
-    tmux split-window -h -t tmux_run
-    tmux send-keys -t tmux_run 'sleep 3; ros2 topic pub /cmd_vel geometry_msgs/msg/TwistStamped "{header: {stamp: {sec: 0, nanosec: 0}, frame_id: 'base_link'}, twist: {linear: {x: 0.223, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.9}}}" -r 10'
     tmux select-layout tiled
 
     tmux split-window -h -t tmux_run
-    tmux send-keys -t tmux_run ' sleep 3; ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.223, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.9}}" -r 10'
+    tmux send-keys -t tmux_run 'sleep 3; ros2 topic pub /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.223, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.9}}" -r 10'
+    # tmux send-keys -t tmux_run 'sleep 3; ros2 topic pub /cmd_vel geometry_msgs/msg/TwistStamped "{header: {stamp: {sec: 0, nanosec: 0}, frame_id: 'base_link'}, twist: {linear: {x: 0.223, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.9}}}" -r 10'
     tmux select-layout tiled
 fi
 tmux attach -t tmux_run
